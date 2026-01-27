@@ -1,0 +1,87 @@
+/* 
+  Localizable.strings
+  ITROOTS
+
+  Created by Macos on 27/01/2026.
+  
+*/
+/* Authentication */
+"welcome" = "مرحباً";
+"sign_in" = "تسجيل الدخول";
+"sign_up" = "إنشاء حساب";
+"sign_out" = "تسجيل الخروج";
+"email" = "البريد الإلكتروني";
+"password" = "كلمة المرور";
+"phone" = "رقم الهاتف";
+"full_name" = "الاسم الكامل";
+"confirm_password" = "تأكيد كلمة المرور";
+"create_account" = "إنشاء حساب";
+"dont_have_account" = "ليس لديك حساب؟";
+"already_have_account" = "هل لديك حساب بالفعل؟";
+"forgot_password" = "نسيت كلمة المرور؟";
+"or_continue_with" = "أو المتابعة باستخدام";
+"join_our_community" = "انضم إلى مجتمعنا";
+"sign_in_to_continue" = "سجل الدخول للمتابعة";
+"welcome_back" = "مرحباً بعودتك";
+
+/* Validation */
+"email_required" = "البريد الإلكتروني مطلوب";
+"invalid_email" = "الرجاء إدخال بريد إلكتروني صحيح";
+"password_required" = "كلمة المرور مطلوبة";
+"password_min_length" = "يجب أن تكون كلمة المرور 6 أحرف على الأقل";
+"name_required" = "الاسم الكامل مطلوب";
+"passwords_dont_match" = "كلمات المرور غير متطابقة";
+"phone_required" = "رقم الهاتف مطلوب";
+
+/* Errors */
+"login_failed" = "فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى.";
+"registration_failed" = "فشل إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
+"network_error" = "خطأ في الشبكة. الرجاء التحقق من اتصالك.";
+"invalid_credentials" = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+"unknown_error" = "حدث خطأ غير معروف";
+
+/* Navigation */
+"home" = "الرئيسية";
+"profile" = "الملف الشخصي";
+"settings" = "الإعدادات";
+"language" = "اللغة";
+"english" = "الإنجليزية";
+"arabic" = "العربية";
+"dark_mode" = "الوضع الداكن";
+"notifications" = "الإشعارات";
+
+/* Buttons */
+"cancel" = "إلغاء";
+"save" = "حفظ";
+"done" = "تم";
+"retry" = "إعادة المحاولة";
+"refresh" = "تحديث";
+
+/* Messages */
+"loading" = "جاري التحميل...";
+"no_internet" = "لا يوجد اتصال بالإنترنت";
+"try_again" = "الرجاء المحاولة مرة أخرى";
+"registration_successful" = "تم إنشاء الحساب بنجاح!";
+"login_successful" = "تم تسجيل الدخول بنجاح!";
+"welcome_user" = "مرحباً، %@!";
+
+/* Errors */
+"error" = "خطأ";
+"server_error" = "خطأ في الخادم";
+
+/* Posts */
+"posts" = "المشاركات";
+"no_posts" = "لا توجد مشاركات متاحة";
+"post_details" = "تفاصيل المشاركة";
+"comments" = "التعليقات";
+"loading_posts" = "جاري تحميل المشاركات...";
+"refresh_posts" = "تحديث المشاركات";
+"offline_mode" = "الوضع دون اتصال";
+"data_cached" = "عرض البيانات المخزنة";
+
+/* Settings */
+"app_settings" = "إعدادات التطبيق";
+"account" = "الحساب";
+"about" = "حول";
+"app_version" = "إصدار التطبيق";
+"logged_in_as" = "مسجل الدخول كـ:";

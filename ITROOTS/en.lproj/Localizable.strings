@@ -1,0 +1,87 @@
+/* 
+  Localizable.strings
+  ITROOTS
+
+  Created by Macos on 27/01/2026.
+  
+*/
+/* Authentication */
+"welcome" = "Welcome";
+"sign_in" = "Sign In";
+"sign_up" = "Sign Up";
+"sign_out" = "Sign Out";
+"email" = "Email";
+"password" = "Password";
+"phone" = "Phone";
+"full_name" = "Full Name";
+"confirm_password" = "Confirm Password";
+"create_account" = "Create Account";
+"dont_have_account" = "Don't have an account?";
+"already_have_account" = "Already have an account?";
+"forgot_password" = "Forgot Password?";
+"or_continue_with" = "Or continue with";
+"join_our_community" = "Join our community";
+"sign_in_to_continue" = "Sign in to continue";
+"welcome_back" = "Welcome Back";
+
+/* Validation */
+"email_required" = "Email is required";
+"invalid_email" = "Please enter a valid email";
+"password_required" = "Password is required";
+"password_min_length" = "Password must be at least 6 characters";
+"name_required" = "Full name is required";
+"passwords_dont_match" = "Passwords do not match";
+"phone_required" = "Phone number is required";
+
+/* Errors */
+"login_failed" = "Login failed. Please try again.";
+"registration_failed" = "Registration failed. Please try again.";
+"network_error" = "Network error. Please check your connection.";
+"invalid_credentials" = "Invalid email or password";
+"unknown_error" = "An unknown error occurred";
+
+/* Navigation */
+"home" = "Home";
+"profile" = "Profile";
+"settings" = "Settings";
+"language" = "Language";
+"english" = "English";
+"arabic" = "Arabic";
+"dark_mode" = "Dark Mode";
+"notifications" = "Notifications";
+
+/* Buttons */
+"cancel" = "Cancel";
+"save" = "Save";
+"done" = "Done";
+"retry" = "Retry";
+"refresh" = "Refresh";
+
+/* Messages */
+"loading" = "Loading...";
+"no_internet" = "No internet connection";
+"try_again" = "Please try again";
+"registration_successful" = "Registration successful!";
+"login_successful" = "Login successful!";
+"welcome_user" = "Welcome, %@!";
+
+/* Errors */
+"error" = "Error";
+"server_error" = "Server error";
+
+/* Posts */
+"posts" = "Posts";
+"no_posts" = "No posts available";
+"post_details" = "Post Details";
+"comments" = "Comments";
+"loading_posts" = "Loading posts...";
+"refresh_posts" = "Refresh Posts";
+"offline_mode" = "Offline Mode";
+"data_cached" = "Showing cached data";
+
+/* Settings */
+"app_settings" = "App Settings";
+"account" = "Account";
+"about" = "About";
+"app_version" = "App Version";
+"logged_in_as" = "Logged in as:";

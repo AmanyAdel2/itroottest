@@ -11,6 +11,11 @@
 		229665CB2F28E0B000A3073B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665CA2F28E0B000A3073B /* ContentView.swift */; };
 		229665CD2F28E0B100A3073B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 229665CC2F28E0B100A3073B /* Assets.xcassets */; };
 		229665D02F28E0B100A3073B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 229665CF2F28E0B100A3073B /* Preview Assets.xcassets */; };
+		229665DA2F28E4A200A3073B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 229665DC2F28E4A200A3073B /* Localizable.strings */; };
+		229665E02F28E81F00A3073B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665DF2F28E81F00A3073B /* User.swift */; };
+		229665E22F28E86A00A3073B /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665E12F28E86A00A3073B /* AuthViewModel.swift */; };
+		229665E42F28E94300A3073B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665E32F28E94300A3073B /* LoginView.swift */; };
+		229665E62F29011D00A3073B /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665E52F29011D00A3073B /* test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,12 @@
 		229665CA2F28E0B000A3073B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		229665CC2F28E0B100A3073B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		229665CF2F28E0B100A3073B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		229665DB2F28E4A200A3073B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		229665DD2F28E4A900A3073B /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		229665DF2F28E81F00A3073B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		229665E12F28E86A00A3073B /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		229665E32F28E94300A3073B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		229665E52F29011D00A3073B /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,10 +62,15 @@
 		229665C72F28E0B000A3073B /* ITROOTS */ = {
 			isa = PBXGroup;
 			children = (
+				229665DE2F28E80200A3073B /* Modeles */,
 				229665C82F28E0B000A3073B /* ITROOTSApp.swift */,
+				229665DC2F28E4A200A3073B /* Localizable.strings */,
 				229665CA2F28E0B000A3073B /* ContentView.swift */,
 				229665CC2F28E0B100A3073B /* Assets.xcassets */,
 				229665CE2F28E0B100A3073B /* Preview Content */,
+				229665E12F28E86A00A3073B /* AuthViewModel.swift */,
+				229665E32F28E94300A3073B /* LoginView.swift */,
+				229665E52F29011D00A3073B /* test.swift */,
 			);
 			path = ITROOTS;
 			sourceTree = "<group>";
@@ -65,6 +81,14 @@
 				229665CF2F28E0B100A3073B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		229665DE2F28E80200A3073B /* Modeles */ = {
+			isa = PBXGroup;
+			children = (
+				229665DF2F28E81F00A3073B /* User.swift */,
+			);
+			path = Modeles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,7 +117,7 @@
 		229665BD2F28E0B000A3073B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
+				BuildIndependentTargetsInParallel = NO;
 				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
@@ -109,6 +133,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 229665BC2F28E0B000A3073B;
 			productRefGroup = 229665C62F28E0B000A3073B /* Products */;
@@ -126,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				229665D02F28E0B100A3073B /* Preview Assets.xcassets in Resources */,
+				229665DA2F28E4A200A3073B /* Localizable.strings in Resources */,
 				229665CD2F28E0B100A3073B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,12 +163,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				229665E22F28E86A00A3073B /* AuthViewModel.swift in Sources */,
+				229665E62F29011D00A3073B /* test.swift in Sources */,
 				229665CB2F28E0B000A3073B /* ContentView.swift in Sources */,
 				229665C92F28E0B000A3073B /* ITROOTSApp.swift in Sources */,
+				229665E42F28E94300A3073B /* LoginView.swift in Sources */,
+				229665E02F28E81F00A3073B /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		229665DC2F28E4A200A3073B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				229665DB2F28E4A200A3073B /* en */,
+				229665DD2F28E4A900A3073B /* ar */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		229665D12F28E0B100A3073B /* Debug */ = {
