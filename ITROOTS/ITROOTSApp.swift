@@ -6,29 +6,42 @@
 //
 
 import SwiftUI
-
 @main
 struct MyApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var localization = LocalizationService.shared
     
-    init() {
-        // اختبار ملفات Localization
-        LocalizationFileChecker.checkLocalizationFiles()
-        LocalizationFileChecker.testAllTranslations()
-    }
-    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(appState)
-                .environmentObject(localization)
-                .environment(\.locale, localization.locale)
-                .environment(\.layoutDirection, localization.layoutDirection)
-                .onAppear {
-                    // اختبار AppStrings
-                    AppStrings.debugLocalization()
+            ZStack {
+                if appState.isLoggedIn {
+                    MainTabView()
+                        .environmentObject(appState)
+                        .environmentObject(localization)
+                } else {
+                    LoginView()
+                        .environmentObject(appState)
+                        .environmentObject(localization)
                 }
+            }
+            .environment(\.locale, localization.locale)
+            .environment(\.layoutDirection, localization.layoutDirection)
+            .onAppear {
+                appState.checkLoginStatus()
+            }
         }
     }
 }
+//
+//    private func applyDarkMode(_ isDark: Bool) {
+//        DispatchQueue.main.async {
+//            for scene in UIApplication.shared.connectedScenes {
+//                if let windowScene = scene as? UIWindowScene {
+//                    for window in windowScene.windows {
+//                        window.overrideUserInterfaceStyle = isDark ? .dark : .light
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}

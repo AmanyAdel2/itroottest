@@ -85,3 +85,16 @@
 "about" = "About";
 "app_version" = "App Version";
 "logged_in_as" = "Logged in as:";
+"language" = "Language";
+"dark_mode" = "Dark Mode";
+"sign_out" = "Sign Out";
+"done" = "Done";
+"settings" = "Settings";
+/* Add these to your existing file */
+"privacy_policy" = "Privacy Policy";
+"terms_of_service" = "Terms of Service";
+"cancel" = "Cancel";
+"confirm_logout" = "Log Out";
+"logout_confirmation" = "Are you sure you want to sign out?";
+"english" = "English";
+"arabic" = "Arabic";

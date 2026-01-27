@@ -85,3 +85,16 @@
 "about" = "حول";
 "app_version" = "إصدار التطبيق";
 "logged_in_as" = "مسجل الدخول كـ:";
+"language" = "اللغة";
+"dark_mode" = "الوضع الداكن";
+"sign_out" = "تسجيل الخروج";
+"done" = "تم";
+"settings" = "الإعدادات";
+/* Add these to your existing file */
+"privacy_policy" = "سياسة الخصوصية";
+"terms_of_service" = "شروط الخدمة";
+"cancel" = "إلغاء";
+"confirm_logout" = "تسجيل الخروج";
+"logout_confirmation" = "هل أنت متأكد أنك تريد تسجيل الخروج؟";
+"english" = "الإنجليزية";
+"arabic" = "العربية";

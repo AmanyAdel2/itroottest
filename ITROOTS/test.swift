@@ -154,28 +154,31 @@ struct DebugStorageView: View {
 
 
 
+import SwiftUI
 
 class LocalizationService: ObservableObject {
     static let shared = LocalizationService()
     
     @Published var currentLanguage: String = "en"
-    @Published var layoutDirection: LayoutDirection = .leftToRight
     @Published var locale: Locale = Locale(identifier: "en")
-    
-    private let storage = StorageService.shared
     
     private init() {
         loadSavedLanguage()
-        print("🚀 LocalizationService initialized")
-        print("📖 Initial language: \(currentLanguage)")
     }
     
     private func loadSavedLanguage() {
-        let savedLanguage = storage.getLanguage()
-        currentLanguage = savedLanguage
-        updateLayoutDirection()
+        if let savedLanguage = UserDefaults.standard.string(forKey: "app_language") {
+            currentLanguage = savedLanguage
+        } else {
+            // Get system language
+            let systemLanguage = Locale.current.language.languageCode?.identifier ?? "en"
+            currentLanguage = systemLanguage
+            UserDefaults.standard.set(currentLanguage, forKey: "app_language")
+        }
+        
         updateLocale()
-        print("📂 Loaded saved language: \(savedLanguage)")
+        UserDefaults.standard.set([currentLanguage], forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
     }
     
     func toggleLanguage() {
@@ -184,92 +187,45 @@ class LocalizationService: ObservableObject {
     }
     
     func setLanguage(_ languageCode: String) {
-        print("🔄 Setting language to: \(languageCode)")
-        
-        // 1. تحديث المتغيرات
         currentLanguage = languageCode
-        storage.saveLanguage(languageCode)
-        
-        // 2. تحديث Layout Direction
-        updateLayoutDirection()
-        
-        // 3. تحديث Locale
         updateLocale()
         
-        // 4. تحديث إعدادات اللغة في UserDefaults
+        // Save preferences
+        UserDefaults.standard.set(languageCode, forKey: "app_language")
         UserDefaults.standard.set([languageCode], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
         
-        // 5. إعادة تحميل Bundle (الطريقة الصحيحة)
-        forceBundleReload()
+        // Notify
+        NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
         
-        // 6. إشعار النظام
-        NotificationCenter.default.post(name: .languageChanged, object: nil)
-        
-        // 7. تحديث الـ UI
+        // Force UI update
         DispatchQueue.main.async {
             self.objectWillChange.send()
-        }
-        
-        print("✅ Language changed to: \(languageCode)")
-        print("🧭 Layout direction: \(layoutDirection == .leftToRight ? "LTR" : "RTL")")
-        print("🌍 Locale: \(locale.identifier)")
-    }
-    
-    private func updateLayoutDirection() {
-        let newDirection: LayoutDirection = currentLanguage == "ar" ? .rightToLeft : .leftToRight
-        if layoutDirection != newDirection {
-            layoutDirection = newDirection
-            print("🧭 Layout direction updated to: \(newDirection == .leftToRight ? "LTR" : "RTL")")
         }
     }
     
     private func updateLocale() {
-        let newLocale = Locale(identifier: currentLanguage)
-        if locale.identifier != newLocale.identifier {
-            locale = newLocale
-            print("🌍 Locale updated to: \(newLocale.identifier)")
-        }
+        locale = Locale(identifier: currentLanguage)
     }
     
-    private func forceBundleReload() {
-        // الطريقة الصحيحة لإعادة تحميل Bundle
-        if let path = Bundle.main.path(forResource: currentLanguage, ofType: "lproj"),
-           let bundle = Bundle(path: path) {
-            print("📦 Bundle found at: \(path)")
-            
-            // اختبار Bundle
-            let testString = bundle.localizedString(forKey: "welcome", value: nil, table: "Localizable")
-            print("🔤 Bundle test translation: \(testString)")
-            
-            // إعادة تعيين Bundle الرئيسي (للتطبيقات المستقبلية)
-            // Note: لا يمكن تغيير Bundle.main مباشرة في iOS
-            // بدلاً من ذلك، سنستخدم NSLocalizedString مع bundle محدد
-        } else {
-            print("⚠️ Bundle NOT found for: \(currentLanguage)")
-            print("📦 Available bundles: \(Bundle.main.localizations)")
-        }
+    var layoutDirection: LayoutDirection {
+        currentLanguage == "ar" ? .rightToLeft : .leftToRight
     }
     
-    // دالة مساعدة للحصول على نص مترجم من bundle معين
-    func localizedString(_ key: String) -> String {
-        if let path = Bundle.main.path(forResource: currentLanguage, ofType: "lproj"),
-           let bundle = Bundle(path: path) {
-            return bundle.localizedString(forKey: key, value: nil, table: "Localizable")
+    // ADD THIS METHOD
+    func localizedString(for key: String) -> String {
+        // First try to get from specific bundle
+        if let bundlePath = Bundle.main.path(forResource: currentLanguage, ofType: "lproj"),
+           let bundle = Bundle(path: bundlePath) {
+            let value = bundle.localizedString(forKey: key, value: nil, table: "Localizable")
+            
+            // If value is same as key, it might not be localized
+            if value != key {
+                return value
+            }
         }
+        
+        // Fallback to NSLocalizedString
         return NSLocalizedString(key, comment: "")
     }
-    
-    var isRTL: Bool {
-        currentLanguage == "ar"
-    }
 }
-
-extension Notification.Name {
-    static let languageChanged = Notification.Name("languageChanged")
-}
-//🔧 إصلاح مشكلة: التطبيق لا يتذكر Login عند إعادة التشغيل
-//
-//المشكلة في StorageService! دعني أصلحه لك:
-
-

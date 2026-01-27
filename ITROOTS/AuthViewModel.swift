@@ -582,33 +582,62 @@ class SettingsViewModel: ObservableObject {
     @Published var isDarkMode: Bool = false
     @Published var currentUser: User?
     
-    private let storage = StorageService.shared
-    private let authService = AuthService.shared
-    
     init() {
         loadSettings()
         loadCurrentUser()
+        setupLanguageObserver()
     }
     
     private func loadSettings() {
-        currentLanguage = storage.getLanguage()
-        isDarkMode = storage.getDarkMode()
+        currentLanguage = UserDefaults.standard.string(forKey: "app_language") ?? "en"
+        isDarkMode = UserDefaults.standard.bool(forKey: "dark_mode")
     }
     
     private func loadCurrentUser() {
-        currentUser = authService.currentUser
+        // Load from your auth service
+        // currentUser = AuthService.shared.currentUser
+    }
+    
+    private func setupLanguageObserver() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("LanguageChanged"),
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            if let language = notification.userInfo?["language"] as? String {
+                self?.currentLanguage = language
+                print("🔔 Language change observed in SettingsViewModel: \(language)")
+            }
+        }
     }
     
     func toggleLanguage() {
-        let newLanguage = currentLanguage == "en" ? "ar" : "en"
-        storage.saveLanguage(newLanguage)
-        currentLanguage = newLanguage
+        LocalizationService.shared.toggleLanguage()
+        currentLanguage = LocalizationService.shared.currentLanguage
     }
     
     func toggleDarkMode() {
         let newValue = !isDarkMode
-        storage.saveDarkMode(newValue)
+        UserDefaults.standard.set(newValue, forKey: "dark_mode")
         isDarkMode = newValue
+        
+        // Apply dark mode immediately
+        applyDarkMode(newValue)
+    }
+    
+    private func applyDarkMode(_ isDark: Bool) {
+        // Get all connected scenes
+        for scene in UIApplication.shared.connectedScenes {
+            if let windowScene = scene as? UIWindowScene {
+                for window in windowScene.windows {
+                    window.overrideUserInterfaceStyle = isDark ? .dark : .light
+                }
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 /*postt vm*/
@@ -704,105 +733,15 @@ struct VerticalItem: Identifiable {
     let icon: String
 }
 /*app state*/
-import Foundation
-
 class AppState: ObservableObject {
     @Published var isLoggedIn: Bool = false
-    @Published var isLoading: Bool = true
-    
-    private let storage = StorageService.shared
-    private let authService = AuthService.shared
     
     init() {
-        print("\n" + String(repeating: "🚀", count: 20))
-        print("APPSTATE INITIALIZED")
-        print(String(repeating: "🚀", count: 20))
-        
-        checkAuthStatus()
-        printStorageState()
+        checkLoginStatus()
     }
     
-    private func checkAuthStatus() {
-        print("\n🔍 === CHECKING AUTH STATUS ===")
-        
-        // 1. تحقق من Storage أولاً
-        let storageStatus = storage.isUserLoggedIn
-        print("📦 Storage login status: \(storageStatus)")
-        
-        // 2. تحقق من AuthService
-        let authServiceStatus = authService.isLoggedIn
-        print("🔐 AuthService login status: \(authServiceStatus)")
-        
-        // 3. تحقق من وجود user في Storage
-        if let currentUser = storage.getCurrentUser() {
-            print("👤 User found in Storage:")
-            print("   Email: \(currentUser.email)")
-            print("   Password: \(currentUser.password)")
-            
-            // تأكد من أن AuthService يعكس نفس الحالة
-            if storageStatus && !authServiceStatus {
-                print("🔄 Syncing AuthService with Storage...")
-                authService.currentUser = currentUser
-                authService.isLoggedIn = true
-            }
-            
-            // تأكيد الحالة النهائية
-            isLoggedIn = true
-            print("✅ Setting isLoggedIn to TRUE")
-            
-        } else {
-            print("👤 No user found in Storage")
-            isLoggedIn = false
-            authService.isLoggedIn = false
-            print("❌ Setting isLoggedIn to FALSE")
-        }
-        
-        print("📊 Final state - isLoggedIn: \(isLoggedIn)")
-        print("=== END AUTH CHECK ===\n")
-        
-        // Simulate splash screen
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            withAnimation {
-                self.isLoading = false
-            }
-            print("🎉 Splash screen finished")
-        }
-    }
-    
-    private func printStorageState() {
-        print("\n📊 === STORAGE STATE ===")
-        
-        // تحقق من جميع المفاتيح المهمة
-        let keysToCheck = [
-            "currentUser",
-            "isLoggedIn",
-            "allUsers"
-        ]
-        
-        for key in keysToCheck {
-            if let value = UserDefaults.standard.object(forKey: key) {
-                print("🔑 \(key): \(value)")
-            } else {
-                print("🔑 \(key): nil")
-            }
-        }
-        
-        print("=== END STORAGE STATE ===\n")
-    }
-    
-    func login() {
-        print("\n🔓 === APPSTATE LOGIN ===")
-        isLoggedIn = true
-        print("✅ isLoggedIn set to true")
-        print("=== END LOGIN ===\n")
-    }
-    
-    func logout() {
-        print("\n🔒 === APPSTATE LOGOUT ===")
-        authService.logout()
-        isLoggedIn = false
-        print("✅ isLoggedIn set to false")
-        print("=== END LOGOUT ===\n")
+    func checkLoginStatus() {
+        isLoggedIn = AuthService.shared.currentUser != nil
     }
 }
 /*erro*/

@@ -5,52 +5,24 @@
 //  Created by Macos on 27/01/2026.
 //
 
-import SwiftUI
-
-import SwiftUI
-
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var localization: LocalizationService
-    @State private var showDebug = false
     
     var body: some View {
         Group {
-            if appState.isLoading {
-                SplashScreen()
-            } else if appState.isLoggedIn {
+            if appState.isLoggedIn {
+                // Show main app interface
                 MainTabView()
             } else {
+                // Show login screen
                 LoginView()
             }
         }
         .environment(\.locale, localization.locale)
         .environment(\.layoutDirection, localization.layoutDirection)
-        .onAppear {
-            print("\n" + String(repeating: "📱", count: 25))
-            print("CONTENTVIEW APPEARED")
-            print(String(repeating: "📱", count: 25))
-            
-            print("AppState.isLoggedIn: \(appState.isLoggedIn)")
-            print("Storage.isLoggedIn: \(StorageService.shared.isUserLoggedIn)")
-            
-            if let user = StorageService.shared.getCurrentUser() {
-                print("👤 Current User: \(user.email)")
-            }
-            
-            print("\n")
-        }
-        .sheet(isPresented: $showDebug) {
-            DebugStorageView()
-                .environmentObject(appState)
-        }
-        .onTapGesture(count: 3) {
-            print("👆 Triple tap detected - showing debug")
-            showDebug = true
-        }
     }
 }
-
 struct SplashScreen: View {
     var body: some View {
         VStack {

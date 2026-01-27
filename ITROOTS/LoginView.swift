@@ -27,7 +27,6 @@ struct LoginView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "globe")
-                                // استخدم AppStrings هنا
                                 Text(localization.currentLanguage == "en" ? AppStrings.arabic : AppStrings.english)
                             }
                             .font(.headline)
@@ -35,28 +34,25 @@ struct LoginView: View {
                         .padding(.horizontal)
                     }
                     
-                    // Header - استخدم AppStrings هنا
+                    // Header
                     VStack(spacing: 10) {
                         Image(systemName: "person.circle.fill")
                             .font(.system(size: 80))
                             .foregroundColor(.blue)
                         
-                        // بدل من: Text("Welcome Back")
                         Text(AppStrings.welcomeBack)
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         
-                        // بدل من: Text("Sign in to continue")
                         Text(AppStrings.signInToContinue)
                             .foregroundColor(.gray)
                     }
                     .padding(.top, 30)
                     
-                    // Login Form - تحديث كل النصوص
+                    // Login Form
                     VStack(spacing: 20) {
                         // Email Field
                         VStack(alignment: .leading, spacing: 8) {
-                            // بدل من: Text("Email")
                             Text(AppStrings.email)
                                 .font(.caption)
                                 .foregroundColor(.gray)
@@ -78,7 +74,6 @@ struct LoginView: View {
                         
                         // Password Field
                         VStack(alignment: .leading, spacing: 8) {
-                            // بدل من: Text("Password")
                             Text(AppStrings.password)
                                 .font(.caption)
                                 .foregroundColor(.gray)
@@ -96,7 +91,6 @@ struct LoginView: View {
                         }
                         
                         // Forgot Password
-                        // بدل من: Button("Forgot Password?")
                         Button(AppStrings.forgotPassword) {
                             // Handle forgot password
                         }
@@ -110,7 +104,8 @@ struct LoginView: View {
                     Button {
                         Task {
                             if await viewModel.login() {
-                                appState.login()
+                                // Update login state
+                                appState.isLoggedIn = true // ← FIX HERE
                             }
                         }
                     } label: {
@@ -118,7 +113,6 @@ struct LoginView: View {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         } else {
-                            // بدل من: Text("Sign In")
                             Text(AppStrings.signIn)
                                 .fontWeight(.semibold)
                         }
@@ -133,11 +127,9 @@ struct LoginView: View {
                     
                     // Register Link
                     HStack {
-                        // بدل من: Text("Don't have an account?")
                         Text(AppStrings.dontHaveAccount)
                             .foregroundColor(.gray)
                         
-                        // بدل من: Button("Sign Up")
                         Button(AppStrings.signUp) {
                             showRegister = true
                         }
@@ -147,7 +139,7 @@ struct LoginView: View {
                     .font(.caption)
                     .padding(.top, 10)
                     
-                    // Add debug info
+                    // Debug info
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Debug Info:")
                             .font(.caption2)
@@ -157,7 +149,7 @@ struct LoginView: View {
                             .font(.caption2)
                             .foregroundColor(.gray)
                         
-                        Text("Test Translation: \(NSLocalizedString("welcome", comment: ""))")
+                        Text("AppState isLoggedIn: \(appState.isLoggedIn ? "YES" : "NO")")
                             .font(.caption2)
                             .foregroundColor(.gray)
                     }
@@ -172,15 +164,14 @@ struct LoginView: View {
         .sheet(isPresented: $showRegister) {
             RegisterView()
                 .environmentObject(localization)
+                .environmentObject(appState) // Pass appState to RegisterView
         }
     }
 }
 /*          register     */
-import SwiftUI
-
 struct RegisterView: View {
     @StateObject private var viewModel = AuthViewModel()
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appState: AppState // ← Add this
     @EnvironmentObject var localization: LocalizationService
     @Environment(\.dismiss) private var dismiss
     
@@ -212,10 +203,6 @@ struct RegisterView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.nameError != nil ? Color.red : Color.clear, lineWidth: 1)
-                                )
                             
                             if let error = viewModel.nameError {
                                 Text(error)
@@ -237,10 +224,6 @@ struct RegisterView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.emailError != nil ? Color.red : Color.clear, lineWidth: 1)
-                                )
                             
                             if let error = viewModel.emailError {
                                 Text(error)
@@ -260,10 +243,6 @@ struct RegisterView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.phoneError != nil ? Color.red : Color.clear, lineWidth: 1)
-                                )
                             
                             if let error = viewModel.phoneError {
                                 Text(error)
@@ -282,10 +261,6 @@ struct RegisterView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.passwordError != nil ? Color.red : Color.clear, lineWidth: 1)
-                                )
                             
                             if let error = viewModel.passwordError {
                                 Text(error)
@@ -304,10 +279,6 @@ struct RegisterView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.confirmPasswordError != nil ? Color.red : Color.clear, lineWidth: 1)
-                                )
                             
                             if let error = viewModel.confirmPasswordError {
                                 Text(error)
@@ -334,7 +305,8 @@ struct RegisterView: View {
                     Button {
                         Task {
                             if await viewModel.register() {
-                                appState.login()
+                                // Update login state
+                                appState.isLoggedIn = true // ← FIX HERE
                                 dismiss()
                             }
                         }
@@ -378,7 +350,7 @@ struct RegisterView: View {
                     .font(.caption)
                     .padding(.top, 10)
                     
-                    // Debug Info (اختياري)
+                    // Debug Info
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Debug Info:")
                             .font(.caption2)
@@ -388,7 +360,7 @@ struct RegisterView: View {
                             .font(.caption2)
                             .foregroundColor(.gray)
                         
-                        Text("Test Translation: \(NSLocalizedString("create_account", comment: ""))")
+                        Text("AppState isLoggedIn: \(appState.isLoggedIn ? "YES" : "NO")")
                             .font(.caption2)
                             .foregroundColor(.gray)
                     }
@@ -410,7 +382,6 @@ struct RegisterView: View {
         }
     }
 }
-
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
         RegisterView()
@@ -658,115 +629,265 @@ struct PostRow: View {
     }
 }
 /*settings view*/
-
+import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var localization: LocalizationService
+    @AppStorage("dark_mode") private var isDarkMode: Bool = false
     @Environment(\.dismiss) private var dismiss
     
     @StateObject private var viewModel = SettingsViewModel()
+    @State private var refreshID = UUID()
+    @State private var showLogoutAlert = false
     
     var body: some View {
         NavigationView {
             List {
-                Section("App Settings") {
+                // App Settings Section
+                Section(header: Text("app_settings".localized)) {
                     // Language Setting
                     HStack {
                         Image(systemName: "globe")
                             .foregroundColor(.blue)
+                            .frame(width: 30)
                         
-                        Text("Language")
+                        VStack(alignment: .leading) {
+                            Text("language".localized)
+                                .font(.body)
+                            
+                            Text(currentLanguageDisplay)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                         
                         Spacer()
                         
                         Button {
-                            viewModel.toggleLanguage()
+                            // Toggle language
+                            localization.toggleLanguage()
+                            forceRefresh()
                         } label: {
                             Text(localization.currentLanguage == "en" ? "العربية" : "English")
+                                .font(.caption)
                                 .foregroundColor(.blue)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
                                 .background(Color.blue.opacity(0.1))
                                 .cornerRadius(8)
                         }
+                        .buttonStyle(.plain)
                     }
+                    .padding(.vertical, 4)
                     
                     // Dark Mode Toggle
                     HStack {
-                        Image(systemName: "moon.fill")
+                        Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
                             .foregroundColor(.purple)
+                            .frame(width: 30)
                         
-                        Text("Dark Mode")
+                        Text("dark_mode".localized)
                         
                         Spacer()
                         
-                        Toggle("", isOn: $viewModel.isDarkMode)
+                        Toggle("", isOn: $isDarkMode)
+                            .labelsHidden()
+                            .onChange(of: isDarkMode) { newValue in
+                                applyDarkMode(newValue)
+                            }
                     }
+                    .padding(.vertical, 4)
                 }
+                .listRowBackground(Color(.systemBackground))
                 
-                Section("Account") {
+                // Account Section
+                Section(header: Text("account".localized)) {
                     // Current User Info
                     if let user = AuthService.shared.currentUser {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Logged in as:")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            
-                            Text(user.fullName)
-                                .font(.headline)
-                            
-                            Text(user.email)
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            
-                            Text(user.phone)
-                                .font(.caption)
-                                .foregroundColor(.gray)
+                            HStack {
+                                Image(systemName: "person.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("logged_in_as".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    
+                                    Text(user.fullName)
+                                        .font(.headline)
+                                    
+                                    Text(user.email)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    
+                                    if !user.phone.isEmpty {
+                                        Text(user.phone)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 5)
                         }
-                        .padding(.vertical, 5)
                     }
                     
                     // Logout Button
                     Button(role: .destructive) {
-                        AuthService.shared.logout()
-                        appState.logout()
-                        dismiss()
+                        showLogoutAlert = true
                     } label: {
                         HStack {
                             Image(systemName: "rectangle.portrait.and.arrow.right")
-                            Text("Sign Out")
+                            Text("sign_out".localized)
                             Spacer()
                         }
+                        .padding(.vertical, 8)
                     }
                 }
+                .listRowBackground(Color(.systemBackground))
                 
-                Section("About") {
+                // About Section
+                Section(header: Text("about".localized)) {
+                    // App Version
                     HStack {
                         Image(systemName: "info.circle")
                             .foregroundColor(.gray)
+                            .frame(width: 30)
                         
-                        Text("App Version")
+                        Text("app_version".localized)
                         
                         Spacer()
                         
                         Text("1.0.0")
                             .foregroundColor(.gray)
                     }
+                    .padding(.vertical, 4)
+                    
+                    // Privacy Policy
+                    Button {
+                        // Open privacy policy
+                    } label: {
+                        HStack {
+                            Image(systemName: "lock.shield")
+                                .foregroundColor(.blue)
+                                .frame(width: 30)
+                            
+                            Text("privacy_policy".localized)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    // Terms of Service
+                    Button {
+                        // Open terms of service
+                    } label: {
+                        HStack {
+                            Image(systemName: "doc.text")
+                                .foregroundColor(.blue)
+                                .frame(width: 30)
+                            
+                            Text("terms_of_service".localized)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
                 }
+                .listRowBackground(Color(.systemBackground))
             }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("settings".localized)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    Button("done".localized) {
                         dismiss()
                     }
+                    .fontWeight(.medium)
+                }
+            }
+            .alert("sign_out".localized, isPresented: $showLogoutAlert) {
+                Button("cancel".localized, role: .cancel) { }
+                Button("confirm_logout".localized, role: .destructive) {
+                    performLogout()
+                }
+            } message: {
+                Text("logout_confirmation".localized)
+            }
+        }
+        .id(refreshID)
+        .environment(\.locale, localization.locale)
+        .environment(\.layoutDirection, localization.layoutDirection)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
+            forceRefresh()
+        }
+        .onAppear {
+            // Initialize dark mode from saved setting
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                windowScene.windows.first?.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
+            }
+        }
+    }
+    
+    // Computed property for language display
+    private var currentLanguageDisplay: String {
+        switch localization.currentLanguage {
+        case "en":
+            return "English"
+        case "ar":
+            return "العربية"
+        default:
+            return localization.currentLanguage
+        }
+    }
+    
+    // Force view refresh
+    private func forceRefresh() {
+        refreshID = UUID()
+        print("🔄 SettingsView refreshed")
+    }
+    
+    // Apply dark mode
+    private func applyDarkMode(_ isDark: Bool) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                windowScene.windows.forEach { window in
+                    window.overrideUserInterfaceStyle = isDark ? .dark : .light
                 }
             }
         }
-        .onChange(of: viewModel.currentLanguage) { newValue in
-            localization.currentLanguage = newValue
-        }
+    }
+    
+    // Perform logout
+    private func performLogout() {
+        print("🚪 Starting logout process...")
+        
+        // 1. Clear auth service
+        AuthService.shared.logout()
+        
+        // 2. Update app state
+        appState.isLoggedIn = false
+        
+        // 3. Clear any cached data
+        UserDefaults.standard.removeObject(forKey: "user_token")
+        UserDefaults.standard.synchronize()
+        
+        // 4. Dismiss settings
+        dismiss()
+        
+        print("✅ Logout completed successfully")
     }
 }

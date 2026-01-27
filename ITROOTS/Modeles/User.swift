@@ -41,7 +41,7 @@ enum AppStrings {
     static func localized(_ key: String) -> String {
         // أولاً: حاول استخدام Bundle الحالي
         if let localization = LocalizationService.shared as? LocalizationService {
-            return localization.localizedString(key)
+            return localization.localizedString(for: key)
         }
         
         // ثانياً: Fallback إلى الطريقة العادية
