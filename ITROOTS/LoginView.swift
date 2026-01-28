@@ -396,9 +396,6 @@ struct RegisterView_Previews: PreviewProvider {
 
 
 struct MainTabView: View {
-    @EnvironmentObject var appState: AppState
-    @EnvironmentObject var localization: LocalizationService
-    
     var body: some View {
         TabView {
             HomeView()
@@ -406,12 +403,11 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
             
-            PostsView()
+            ProductsView()
                 .tabItem {
-                    Label("Posts", systemImage: "list.bullet")
+                    Label("Products", systemImage: "bag.fill")
                 }
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 /* home view*/
@@ -534,100 +530,100 @@ struct VerticalCard: View {
 }
 /* post view*/
 
-struct PostsView: View {
-    @StateObject private var viewModel = PostsViewModel()
-    @EnvironmentObject var localization: LocalizationService
-    
-    var body: some View {
-        NavigationView {
-            Group {
-                if viewModel.isLoading {
-                    VStack {
-                        ProgressView()
-                        Text("Loading posts...")
-                            .foregroundColor(.gray)
-                            .padding(.top)
-                    }
-                } else if viewModel.posts.isEmpty {
-                    VStack(spacing: 20) {
-                        Image(systemName: "wifi.slash")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        
-                        Text("No posts available")
-                            .font(.title2)
-                            .foregroundColor(.gray)
-                        
-                        if viewModel.isOffline {
-                            Text("You're offline. Please check your internet connection.")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                        }
-                    }
-                } else {
-                    List(viewModel.posts) { post in
-                        PostRow(post: post)
-                    }
-                    .refreshable {
-                        await viewModel.refreshPosts()
-                    }
-                }
-            }
-            .navigationTitle("Posts")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        Task {
-                            await viewModel.refreshPosts()
-                        }
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .disabled(viewModel.isLoading)
-                }
-            }
-        }
-        .onAppear {
-            Task {
-                await viewModel.loadPosts()
-            }
-        }
-    }
-}
+//struct PostsView: View {
+//    @StateObject private var viewModel = PostsViewModel()
+//    @EnvironmentObject var localization: LocalizationService
+//    
+//    var body: some View {
+//        NavigationView {
+//            Group {
+//                if viewModel.isLoading {
+//                    VStack {
+//                        ProgressView()
+//                        Text("Loading posts...")
+//                            .foregroundColor(.gray)
+//                            .padding(.top)
+//                    }
+//                } else if viewModel.posts.isEmpty {
+//                    VStack(spacing: 20) {
+//                        Image(systemName: "wifi.slash")
+//                            .font(.system(size: 60))
+//                            .foregroundColor(.gray)
+//                        
+//                        Text("No posts available")
+//                            .font(.title2)
+//                            .foregroundColor(.gray)
+//                        
+//                        if viewModel.isOffline {
+//                            Text("You're offline. Please check your internet connection.")
+//                                .font(.caption)
+//                                .foregroundColor(.orange)
+//                                .multilineTextAlignment(.center)
+//                                .padding(.horizontal)
+//                        }
+//                    }
+//                } else {
+//                    List(viewModel.posts) { post in
+//                        PostRow(post: post)
+//                    }
+//                    .refreshable {
+//                        await viewModel.refreshPosts()
+//                    }
+//                }
+//            }
+//            .navigationTitle("Posts")
+//            .navigationBarTitleDisplayMode(.large)
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Button {
+//                        Task {
+//                            await viewModel.refreshPosts()
+//                        }
+//                    } label: {
+//                        Image(systemName: "arrow.clockwise")
+//                    }
+//                    .disabled(viewModel.isLoading)
+//                }
+//            }
+//        }
+//        .onAppear {
+//            Task {
+//                await viewModel.loadPosts()
+//            }
+//        }
+//    }
+//}
 
-struct PostRow: View {
-    let post: Post
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(post.title)
-                .font(.headline)
-                .lineLimit(2)
-            
-            Text(post.body)
-                .font(.body)
-                .foregroundColor(.gray)
-                .lineLimit(3)
-            
-            HStack {
-                Text("Post ID: \(post.id)")
-                    .font(.caption)
-                    .foregroundColor(.blue)
-                
-                Spacer()
-                
-                Text("User: \(post.userId)")
-                    .font(.caption)
-                    .foregroundColor(.green)
-            }
-            .padding(.top, 5)
-        }
-        .padding(.vertical, 8)
-    }
-}
+//struct PostRow: View {
+//    let post: Post
+//    
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 8) {
+//            Text(post.title)
+//                .font(.headline)
+//                .lineLimit(2)
+//            
+//            Text(post.body)
+//                .font(.body)
+//                .foregroundColor(.gray)
+//                .lineLimit(3)
+//            
+//            HStack {
+//                Text("Post ID: \(post.id)")
+//                    .font(.caption)
+//                    .foregroundColor(.blue)
+//                
+//                Spacer()
+//                
+//                Text("User: \(post.userId)")
+//                    .font(.caption)
+//                    .foregroundColor(.green)
+//            }
+//            .padding(.top, 5)
+//        }
+//        .padding(.vertical, 8)
+//    }
+//}
 /*settings view*/
 import SwiftUI
 

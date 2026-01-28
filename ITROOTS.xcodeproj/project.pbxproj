@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2291249D2F29650B000F8EFF /* products.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291249C2F29650B000F8EFF /* products.swift */; };
 		229665C92F28E0B000A3073B /* ITROOTSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665C82F28E0B000A3073B /* ITROOTSApp.swift */; };
 		229665CB2F28E0B000A3073B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229665CA2F28E0B000A3073B /* ContentView.swift */; };
 		229665CD2F28E0B100A3073B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 229665CC2F28E0B100A3073B /* Assets.xcassets */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2291249A2F295B2A000F8EFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2291249C2F29650B000F8EFF /* products.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = products.swift; sourceTree = "<group>"; };
 		229665C52F28E0B000A3073B /* ITROOTS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ITROOTS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229665C82F28E0B000A3073B /* ITROOTSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITROOTSApp.swift; sourceTree = "<group>"; };
 		229665CA2F28E0B000A3073B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -46,6 +49,7 @@
 		229665BC2F28E0B000A3073B = {
 			isa = PBXGroup;
 			children = (
+				2291249A2F295B2A000F8EFF /* Info.plist */,
 				229665C72F28E0B000A3073B /* ITROOTS */,
 				229665C62F28E0B000A3073B /* Products */,
 			);
@@ -71,6 +75,7 @@
 				229665E12F28E86A00A3073B /* AuthViewModel.swift */,
 				229665E32F28E94300A3073B /* LoginView.swift */,
 				229665E52F29011D00A3073B /* test.swift */,
+				2291249C2F29650B000F8EFF /* products.swift */,
 			);
 			path = ITROOTS;
 			sourceTree = "<group>";
@@ -165,6 +170,7 @@
 			files = (
 				229665E22F28E86A00A3073B /* AuthViewModel.swift in Sources */,
 				229665E62F29011D00A3073B /* test.swift in Sources */,
+				2291249D2F29650B000F8EFF /* products.swift in Sources */,
 				229665CB2F28E0B000A3073B /* ContentView.swift in Sources */,
 				229665C92F28E0B000A3073B /* ITROOTSApp.swift in Sources */,
 				229665E42F28E94300A3073B /* LoginView.swift in Sources */,
@@ -311,6 +317,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ITROOTS/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -339,6 +346,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ITROOTS/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

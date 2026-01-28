@@ -333,19 +333,54 @@ class AuthService: ObservableObject {
 import Foundation
 
 class StorageService {
-    static let shared = StorageService()
+   
     
-    private let defaults = UserDefaults.standard
     
-    private enum Keys: String {
-        case currentUser
-        case isLoggedIn
-        case allUsers
-        case cachedPosts
-        case cacheTimestamp
-        case language
-        case darkMode
-    }
+        static let shared = StorageService()
+        
+        private let defaults = UserDefaults.standard
+        
+        private enum Keys: String {
+            case cachedProducts
+            case productsCacheTimestamp
+            case currentUser
+            case isLoggedIn
+            case allUsers
+            case language
+            case darkMode
+        }
+        
+        // MARK: - Product Cache
+        func saveProducts(_ products: [Product]) {
+            do {
+                let encoder = JSONEncoder()
+                let data = try encoder.encode(products)
+                
+                defaults.set(data, forKey: Keys.cachedProducts.rawValue)
+                defaults.set(Date(), forKey: Keys.productsCacheTimestamp.rawValue)
+                defaults.synchronize()
+                
+                print("💾 Saved \(products.count) products")
+            } catch {
+                print("❌ Error saving products: \(error)")
+            }
+        }
+        
+        func getCachedProducts() -> [Product]? {
+            guard let data = defaults.data(forKey: Keys.cachedProducts.rawValue) else {
+                return nil
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                return try decoder.decode([Product].self, from: data)
+            } catch {
+                print("❌ Error loading cached products: \(error)")
+                return nil
+            }
+        }
+        
+   
     
     // MARK: - User Management
     func saveCurrentUser(_ user: User) {
@@ -484,28 +519,9 @@ class StorageService {
         }
     }
     
-    // MARK: - Posts Cache
-    func savePosts(_ posts: [Post]) {
-        if let encoded = try? JSONEncoder().encode(posts) {
-            defaults.set(encoded, forKey: Keys.cachedPosts.rawValue)
-            defaults.set(Date(), forKey: Keys.cacheTimestamp.rawValue)
-            defaults.synchronize()
-        }
-    }
+   
+       
     
-    func getCachedPosts() -> [Post]? {
-        guard let data = defaults.data(forKey: Keys.cachedPosts.rawValue) else {
-            return nil
-        }
-        return try? JSONDecoder().decode([Post].self, from: data)
-    }
-    
-    func isCacheValid() -> Bool {
-        guard let timestamp = defaults.object(forKey: Keys.cacheTimestamp.rawValue) as? Date else {
-            return false
-        }
-        return Date().timeIntervalSince(timestamp) < 3600 // 1 hour
-    }
     
     // MARK: - Settings
     func saveLanguage(_ languageCode: String) {
@@ -643,50 +659,50 @@ class SettingsViewModel: ObservableObject {
 /*postt vm*/
 
 
-@MainActor
-class PostsViewModel: ObservableObject {
-    @Published var posts: [Post] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    @Published var isOffline = false
-    
-    private let networkService = NetworkService.shared
-    
-    func loadPosts() async {
-        isLoading = true
-        errorMessage = nil
-        
-        let fetchedPosts = await networkService.getPosts()
-        
-        await MainActor.run {
-            self.posts = fetchedPosts
-            self.isLoading = false
-            self.isOffline = !networkService.isConnected
-            
-            if fetchedPosts.isEmpty && self.isOffline {
-                self.errorMessage = "No internet connection. Showing cached data."
-            }
-        }
-    }
-    
-    func refreshPosts() async {
-        guard networkService.isConnected else {
-            errorMessage = "No internet connection"
-            return
-        }
-        
-        isLoading = true
-        errorMessage = nil
-        
-        let refreshedPosts = await networkService.refreshPosts()
-        
-        await MainActor.run {
-            self.posts = refreshedPosts
-            self.isLoading = false
-            self.isOffline = false
-        }
-    }
-}
+//@MainActor
+//class PostsViewModel: ObservableObject {
+//    @Published var posts: [Post] = []
+//    @Published var isLoading = false
+//    @Published var errorMessage: String?
+//    @Published var isOffline = false
+//    
+//    private let networkService = NetworkService.shared
+//    
+//    func loadPosts() async {
+//        isLoading = true
+//        errorMessage = nil
+//        
+//        let fetchedPosts = await networkService.getPosts()
+//        
+//        await MainActor.run {
+//            self.posts = fetchedPosts
+//            self.isLoading = false
+//            self.isOffline = !networkService.isConnected
+//            
+//            if fetchedPosts.isEmpty && self.isOffline {
+//                self.errorMessage = "No internet connection. Showing cached data."
+//            }
+//        }
+//    }
+//    
+//    func refreshPosts() async {
+//        guard networkService.isConnected else {
+//            errorMessage = "No internet connection"
+//            return
+//        }
+//        
+//        isLoading = true
+//        errorMessage = nil
+//        
+//        let refreshedPosts = await networkService.refreshPosts()
+//        
+//        await MainActor.run {
+//            self.posts = refreshedPosts
+//            self.isLoading = false
+//            self.isOffline = false
+//        }
+//    }
+//}
 /*home vm*/
 import SwiftUI
 
@@ -772,64 +788,3 @@ enum AuthError: Error, LocalizedError {
 }
 
 /*network*/
-import Foundation
-
-class NetworkService {
-    static let shared = NetworkService()
-    
-    var isConnected: Bool {
-        true // Simple check for demo
-    }
-    
-    private let storage = StorageService.shared
-    private let baseURL = "https://jsonplaceholder.typicode.com"
-    
-    // MARK: - Fetch Posts
-    func fetchPosts() async throws -> [Post] {
-        guard let url = URL(string: "\(baseURL)/posts") else {
-            throw URLError(.badURL)
-        }
-        
-        // Check cache first
-        if storage.isCacheValid(), let cachedPosts = storage.getCachedPosts() {
-            return cachedPosts
-        }
-        
-        // Fetch from network
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let posts = try JSONDecoder().decode([Post].self, from: data)
-        
-        // Save to cache
-        storage.savePosts(posts)
-        
-        return posts
-    }
-    
-    // MARK: - Get Posts (Main method)
-    func getPosts() async -> [Post] {
-        do {
-            if isConnected {
-                let posts = try await fetchPosts()
-                return posts
-            } else {
-                // Return cached posts if offline
-                return storage.getCachedPosts() ?? []
-            }
-        } catch {
-            print("Error fetching posts: \(error)")
-            return storage.getCachedPosts() ?? []
-        }
-    }
-    
-    func refreshPosts() async -> [Post] {
-        do {
-            let posts = try await fetchPosts()
-            return posts
-        } catch {
-            print("Error refreshing posts: \(error)")
-            return storage.getCachedPosts() ?? []
-        }
-    }
-}
-//
-
